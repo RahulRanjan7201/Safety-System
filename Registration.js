@@ -50,19 +50,21 @@ export default class Registration extends Component{
       this.saveFormData()
     }
     async saveFormData() {
-
         await fetch('http://192.168.1.228:3000/?key=a65aba16b4035268d20f69877a0f9ca0b9b3ba2b', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: JSON.stringify(this.state),
-      }).then((response) => response.text())
+        body: (this.state),
+      }).then((response) => response.json())
       .then((responseData) => {
-          console.log("Response:",JSON.stringify(responseData));
+          if(responseData.status === 400) {
+            const convertToArray = responseData.message.split(',');
+            console.log(convertToArray);
+            Alert.alert(convertToArray[0]);
+          }
        }).catch((error) => {
-         console.log(error);
               Alert.alert('problem while adding data');
           })
       .done();
