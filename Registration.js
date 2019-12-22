@@ -49,22 +49,28 @@ export default class Registration extends Component{
       }
       this.saveFormData()
     }
-    async saveFormData() {
-        await fetch('http://192.168.1.228:3000/?key=a65aba16b4035268d20f69877a0f9ca0b9b3ba2b', {
+     saveFormData() {
+         fetch('http://192.168.1.228:3000/?key=a65aba16b4035268d20f69877a0f9ca0b9b3ba2b', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/json',
         },
-        body: (this.state),
+        body: JSON.stringify({'data':JSON.stringify(this.state)}),
       }).then((response) => response.json())
       .then((responseData) => {
+        // Na - https://reactnativecode.com/navigate-second-activity-stacknavigator/
           if(responseData.status === 400) {
             const convertToArray = responseData.message.split(',');
             console.log(convertToArray);
             Alert.alert(convertToArray[0]);
           }
+          else {
+            Alert.alert(responseData.message)
+            const {navigate} = this.props.navigation.navigate('Home')
+          }
        }).catch((error) => {
+         console.log(error)
               Alert.alert('problem while adding data');
           })
       .done();
